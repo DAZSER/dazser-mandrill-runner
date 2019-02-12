@@ -1,0 +1,73 @@
+service: dazser-mandrill-runner
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    SQS_QUEUE_NAME: ${self:service}-${opt:stage, self:provider.stage}
+    SQS_QUEUE_ARN: arn:aws:sqs:${opt:region, self:provider.region}:***REMOVED***:${self:provider.environment.SQS_QUEUE_NAME}
+    SQS_QUEUE_URL: "https://sqs.${opt:region, self:provider.region}.amazonaws.com/***REMOVED***/${self:provider.environment.SQS_QUEUE_NAME}"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:***REMOVED***:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+# you can add packaging information here
+package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+  exclude:
+    - typescript/**
+#    - exclude-me-dir/**
+
+functions:
+  sendPayloadToMandrill:
+    handler: handler.sendPayloadToMandrill
+    timeout: 120
+    events:
+      - sqs: ${self:provider.environment.SQS_QUEUE_ARN}
+        batchSize: 1
+
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+    SQSDLQQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: dlq-${self:provider.environment.SQS_QUEUE_NAME}
+        KmsMasterKeyId: alias/aws/sqs
+        KmsDataKeyReusePeriodSeconds: 12000
+    SQSQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: ${self:provider.environment.SQS_QUEUE_NAME}
+        KmsMasterKeyId: alias/aws/sqs
+        KmsDataKeyReusePeriodSeconds: 12000
+        VisibilityTimeout: 600
+        RedrivePolicy:
+          deadLetterTargetArn: arn:aws:sqs:${opt:region, self:provider.region}:***REMOVED***:dlq-${self:service}-${opt:stage, self:provider.stage}
+          maxReceiveCount: 5

@@ -1,0 +1,29 @@
+{
+  "name": "dazser-mandrill-runner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.19",
+    "@types/node": "^10.12.24",
+    "@types/request": "^2.48.1",
+    "@types/request-promise-native": "^1.0.15",
+    "aws-sdk": "^2.400.0",
+    "serverless": "^1.37.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "scripts": {
+    "test": "sls invoke local --function sendPayloadToMandrill --path event.json",
+    "js-lint": "tslint -c tslint.json 'typescript/*.ts'",
+    "js-compile": "tsc -p tsconfig.json",
+    "deploy": "sls deploy -v",
+    "deploy-prod": "sls deploy -v --stage prod"
+  },
+  "author": "",
+  "license": "ISC"
+}
