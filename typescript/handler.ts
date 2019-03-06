@@ -1,7 +1,7 @@
 import * as request from "request-promise-native";
 import checkMessage from "./dynamo";
 
-export const sendPayloadToMandrill = async (event: AWSLambda.SQSEvent, context: AWSLambda.Context) => {
+export const sendPayloadToMandrill = async (event: AWSLambda.SQSEvent) => {
 
   // This function will send the payload to mandrill
   // console.log(JSON.stringify(event));
@@ -19,7 +19,7 @@ export const sendPayloadToMandrill = async (event: AWSLambda.SQSEvent, context: 
   for (const record of event.Records) {
 
     if (await checkMessage(record.messageId, record.receiptHandle)) {
-      console.log("Duplicate!", record);
+      console.error("Duplicate!", record);
       continue;
     }
 
@@ -32,9 +32,7 @@ export const sendPayloadToMandrill = async (event: AWSLambda.SQSEvent, context: 
       options.body = payload;
 
       // Now that we have the json set up, call mandrill
-      const result = await request.post(options);
-
-      console.log(result);
+      await request.post(options);
 
     }
   }

@@ -13,7 +13,7 @@ export default async function(messageId: string, receiptHandle: string) {
     ],
     ConsistentRead: true,
     Key: {
-      "id": {
+      id: {
         S: messageId,
       },
     },
@@ -36,19 +36,17 @@ export default async function(messageId: string, receiptHandle: string) {
     // if it doesn't exist , enter it, then continue
     const ddbPut: DynamoDB.PutItemInput = {
       Item: {
-        "expires": {
+        expires: {
           S: (Date.now() + 3.6e+6).toString(),
         },
-        "id": {
+        id: {
           S: messageId,
         },
       },
       TableName: process.env.DYNAMODB_TABLE as string,
     };
 
-    const putItem = await ddb.putItem(ddbPut).promise();
-
-    console.log(putItem);
+    await ddb.putItem(ddbPut).promise();
 
     return false;
   }
