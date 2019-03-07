@@ -2,27 +2,27 @@
   "name": "dazser-mandrill-runner",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "handler.js",
   "dependencies": {
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5"
+    "request-promise-native": "^1.0.7"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.19",
-    "@types/node": "^10.12.24",
+    "@types/aws-lambda": "^8.10.21",
+    "@types/node": "^11.10.5",
     "@types/request": "^2.48.1",
     "@types/request-promise-native": "^1.0.15",
-    "aws-sdk": "^2.400.0",
-    "serverless": "^1.37.1",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.3"
+    "aws-sdk": "^2.416.0",
+    "serverless": "^1.38.0",
+    "tslint": "^5.13.1",
+    "typescript": "^3.3.3333"
   },
   "scripts": {
     "test": "sls invoke local --function sendPayloadToMandrill --path event.json",
-    "js-lint": "tslint -c tslint.json 'typescript/*.ts'",
-    "js-compile": "tsc -p tsconfig.json",
-    "deploy": "sls deploy -v",
-    "deploy-prod": "sls deploy -v --stage prod"
+    "lint:js": "tslint -c tslint.json 'typescript/*.ts'",
+    "compile:js": "tsc -p tsconfig.json",
+    "deploy:dev": "sls deploy -v",
+    "deploy:prod": "sls deploy -v --stage prod"
   },
   "author": "",
   "license": "ISC"

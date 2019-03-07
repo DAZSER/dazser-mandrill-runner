@@ -25,7 +25,9 @@
     "strictBindCallApply": true,
     "downlevelIteration": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "outDir": "",
+    "rootDir": "typescript"
   },
   "exclude": [
     "public",
