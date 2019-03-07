@@ -6,32 +6,33 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    SQS_QUEUE_NAME: ${self:service}-${opt:stage, self:provider.stage}
-    SQS_QUEUE_ARN: arn:aws:sqs:${opt:region, self:provider.region}:***REMOVED***:${self:provider.environment.SQS_QUEUE_NAME}
-    SQS_QUEUE_URL: "https://sqs.${opt:region, self:provider.region}.amazonaws.com/***REMOVED***/${self:provider.environment.SQS_QUEUE_NAME}"
+    DYNAMODB_TABLE: !Ref DynamoDbTable
+    SQS_QUEUE_NAME: !GetAtt SQSQueue.QueueName
+    SQS_QUEUE_ARN: !GetAtt SQSQueue.Arn
+    SQS_QUEUE_URL: !Ref SQSQueue
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:***REMOVED***:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: !GetAtt DynamoDbTable.Arn
+
+custom:
+  DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  SQS_QUEUE_NAME: ${self:service}-${opt:stage, self:provider.stage}
 
 # you can add packaging information here
 package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
   exclude:
     - typescript/**
-#    - exclude-me-dir/**
 
 functions:
   sendPayloadToMandrill:
     handler: handler.sendPayloadToMandrill
     timeout: 120
     events:
-      - sqs: ${self:provider.environment.SQS_QUEUE_ARN}
+      - sqs: 
+          arn: !GetAtt SQSQueue.Arn
         batchSize: 1
 
 resources:
@@ -54,20 +55,29 @@ resources:
         TimeToLiveSpecification:
           AttributeName: expires
           Enabled: true
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:custom.DYNAMODB_TABLE}
     SQSDLQQueue:
       Type: "AWS::SQS::Queue"
       Properties:
-        QueueName: dlq-${self:provider.environment.SQS_QUEUE_NAME}
+        QueueName: dlq-${self:custom.SQS_QUEUE_NAME}
         KmsMasterKeyId: alias/aws/sqs
         KmsDataKeyReusePeriodSeconds: 12000
     SQSQueue:
       Type: "AWS::SQS::Queue"
       Properties:
-        QueueName: ${self:provider.environment.SQS_QUEUE_NAME}
+        QueueName: ${self:custom.SQS_QUEUE_NAME}
         KmsMasterKeyId: alias/aws/sqs
         KmsDataKeyReusePeriodSeconds: 12000
         VisibilityTimeout: 600
         RedrivePolicy:
-          deadLetterTargetArn: arn:aws:sqs:${opt:region, self:provider.region}:***REMOVED***:dlq-${self:service}-${opt:stage, self:provider.stage}
+          deadLetterTargetArn: !GetAtt SQSDLQQueue.Arn
           maxReceiveCount: 5
+  Outputs:
+    DynamoDbTableName:
+      Value: !Ref DynamoDbTable
+    DynamoDbTableArn:
+      Value: !GetAtt DynamoDbTable.Arn
+    SQSDLQQueueArn:
+      Value: !GetAtt SQSDLQQueue.Arn
+    SQSQueueArn:
+      Value: !GetAtt SQSQueue.Arn
