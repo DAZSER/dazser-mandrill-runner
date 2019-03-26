@@ -1,6 +1,6 @@
 {
   "name": "dazser-mandrill-runner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Takes a Mandrill REST API payload and sends it to Mandrill",
   "main": "handler.js",
   "dependencies": {
