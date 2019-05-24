@@ -1,0 +1,1 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/Sparticuz/dazser-mandrill-runner/badge.svg?targetFile=package.json)](https://snyk.io/test/github/Sparticuz/dazser-mandrill-runner?targetFile=package.json)
