@@ -8,14 +8,16 @@
     "request-promise-native": "^1.0.7"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.25",
-    "@types/node": "^12.0.2",
-    "@types/request": "^2.48.1",
+    "@types/aws-lambda": "^8.10.31",
+    "@types/node": "^12.7.4",
+    "@types/request": "^2.48.2",
     "@types/request-promise-native": "^1.0.16",
-    "aws-sdk": "^2.458.0",
-    "serverless": "^1.43.0",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
+    "aws-sdk": "^2.524.0",
+    "tslint": "^5.19.0"
+  },
+  "peerDependencies": {
+    "serverless": "^1.45.1",
+    "typescript": "^3.5.2"
   },
   "scripts": {
     "test": "sls invoke local --function sendPayloadToMandrill --path event.json",
