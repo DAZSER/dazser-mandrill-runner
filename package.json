@@ -5,7 +5,8 @@
   "main": "handler.js",
   "dependencies": {
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.7"
+    "request-promise-native": "^1.0.7",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.31",
@@ -24,8 +25,11 @@
     "lint:js": "tslint -c tslint.json 'typescript/*.ts'",
     "compile:js": "tsc -p tsconfig.json",
     "deploy:dev": "sls deploy -v",
-    "deploy:prod": "sls deploy -v --stage prod"
+    "deploy:prod": "sls deploy -v --stage prod",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "snyk": true
 }
