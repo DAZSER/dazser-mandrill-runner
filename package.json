@@ -1,27 +1,31 @@
 {
   "name": "dazser-mandrill-runner",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "Takes a Mandrill REST API payload and sends it to Mandrill",
-  "main": "handler.js",
+  "main": "dist/handler.js",
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7"
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.8",
+    "typescript": "^3.8.3"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.31",
-    "@types/node": "^12.7.4",
-    "@types/request": "^2.48.2",
-    "@types/request-promise-native": "^1.0.16",
-    "aws-sdk": "^2.524.0",
-    "tslint": "^5.19.0"
-  },
-  "peerDependencies": {
-    "serverless": "^1.45.1",
-    "typescript": "^3.5.2"
+    "@types/aws-lambda": "^8.10.46",
+    "@types/node": "^13.9.3",
+    "@types/request": "^2.48.4",
+    "@types/request-promise-native": "^1.0.17",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "aws-sdk": "^2.643.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.1",
+    "tslint": "^6.1.0",
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "test": "sls invoke local --function sendPayloadToMandrill --path event.json",
-    "lint:js": "tslint -c tslint.json 'typescript/*.ts'",
+    "lint:js": "eslint \"typescript/*.ts\"",
     "compile:js": "tsc -p tsconfig.json",
     "deploy:dev": "sls deploy -v",
     "deploy:prod": "sls deploy -v --stage prod"

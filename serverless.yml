@@ -1,8 +1,10 @@
+org: networkadmin
+app: dazser-mailer-app
 service: dazser-mandrill-runner
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   stage: dev
   region: us-east-1
   environment:
@@ -28,7 +30,7 @@ package:
 
 functions:
   sendPayloadToMandrill:
-    handler: handler.sendPayloadToMandrill
+    handler: dist/handler.sendPayloadToMandrill
     timeout: 120
     events:
       - sqs:

@@ -8,9 +8,7 @@ const sqs_1 = __importDefault(require("aws-sdk/clients/sqs"));
 const ddb = new dynamodb_1.default({ apiVersion: "2012-08-10" });
 async function default_1(messageId, receiptHandle) {
     const ddbExists = {
-        AttributesToGet: [
-            "id",
-        ],
+        AttributesToGet: ["id"],
         ConsistentRead: true,
         Key: {
             id: {
@@ -33,7 +31,7 @@ async function default_1(messageId, receiptHandle) {
         const ddbPut = {
             Item: {
                 expires: {
-                    S: (Date.now() + 3.6e+6).toString(),
+                    S: (Date.now() + 3.6e6).toString(),
                 },
                 id: {
                     S: messageId,

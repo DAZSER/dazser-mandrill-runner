@@ -33,5 +33,5 @@ exports.sendPayloadToMandrill = async (event) => {
             await request.post(options);
         }
     }
-    return { message: "Payloads sent successfully!" };
+    return;
 };
